@@ -1,0 +1,36 @@
+{
+  "name": "log-db",
+  "version": "1.0.0",
+  "description": "A module for storing log streams in leveldb.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tizzo/log-db.git"
+  },
+  "keywords": [
+    "leveldb",
+    "log"
+  ],
+  "author": "Howard Tyson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tizzo/log-db/issues"
+  },
+  "homepage": "https://github.com/tizzo/log-db",
+  "devDependencies": {
+    "event-stream": "^3.3.0",
+    "level": "^0.18.0",
+    "mocha": "^2.2.1",
+    "should": "^5.2.0",
+    "through2": "^0.6.3"
+  },
+  "dependencies": {
+    "level-writestream": "^0.1.3"
+  }
+}
