@@ -7,7 +7,8 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "coverage": "istanbul cover ./node_modules/.bin/_mocha"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
     "through2": "^0.6.3"
   },
   "dependencies": {
+    "istanbul": "^0.3.13",
     "level-writestream": "^0.1.3"
   }
 }
