@@ -68,4 +68,44 @@ describe('LogDB', function() {
       });
     });
   });
+  it('should return an error in store log file if the db could not be created', function(done) {
+    var mockDb = {
+      put: function(key, value, options, done) {
+        done(new Error('Invalid input.'));  
+      },
+      createWriteStream: function() {
+        console.log('creating write stream');
+        return through2();
+      },
+      once: function() {},
+    };
+    var logdb = new LogDB(mockDb);
+    logdb.storeLogFile('foo.log', function(error) {
+      should.exist(error);
+      done();
+    });
+  });
+  it('should use this.options when methods are called without options.', function(done) {
+    var logdb = new LogDB(db, { prefix: 'foo' });
+    var writeStream = logdb.createLogWriteStream('foo');
+    writeStream.on('data', function(data) {
+      data.key.should.equal('foo!foo!!0000000');
+      data.value.should.equal('foo');
+    });
+    writeStream.write('foo');
+    var writeLog = logdb.storeLogFile('baz');
+    writeLog.write('fooey');
+    writeLog.emit('close');
+    setTimeout(function() {
+      readStream = db.createReadStream({
+        start: 'foo!!',
+        end: 'foo!~',
+      });
+      readStream.pipe(es.writeArray(function(error, array) {
+        array.length.should.equal(1);
+        array[0].key.should.equal('foo!baz!!0000000');
+        done();
+      }));
+    }, 5);
+  });
 });

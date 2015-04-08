@@ -33,7 +33,7 @@ var LogDB = function(db, options) {
  *   An optinal array of options
  */
 LogDB.prototype.storeLogFile = function(filename, options, done) {
-  if (done == undefined) {
+  if (done == undefined && typeof options == 'function') {
     done = options;
     options = this.options;
   }
@@ -45,14 +45,15 @@ LogDB.prototype.storeLogFile = function(filename, options, done) {
   };
   var self = this;
   var key = prefix + separator + Date.now() + separator + filename;
+  var logStream = self.createLogWriteStream(filename, options);
+  var dbWriteStream = self.db.createWriteStream();
+  logStream.pipe(dbWriteStream);
   this.db.put(key, value, { keyEncoding: 'json' }, function(error) {
-    var logStream = self.createLogWriteStream(filename, options);
-    console.log(self.db);
-    var dbWriteStream = self.db.createWriteStream();
-    if (error) return done(error);
-    logStream.pipe(dbWriteStream);
-    done(error, logStream);
+    if (done) {
+      done(error, logStream);
+    }
   });
+  return logStream;
 };
 
 /**
