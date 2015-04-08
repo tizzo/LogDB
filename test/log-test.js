@@ -2,7 +2,8 @@ var should = require('should');
 var through2 = require('through2');
 var es = require('event-stream');
 var fs = require('fs');
-var level = require('level')
+var levelup = require('levelup')
+var memdown = require('memdown');
 
 var LogDB = require('../index.js');
 
@@ -10,7 +11,7 @@ var db = null;
 
 describe('LogDB', function() {
   before(function(done) {
-    db = level('/tmp/logdb-' + Date.now(), done);
+    db = levelup('/nonsense', { db: memdown }, done);
   });
   it('should store a record of the log file', function(done) {
     done();
@@ -28,16 +29,16 @@ describe('LogDB', function() {
           }
         }))
         .pipe(es.writeArray(function(error, writtenData) {
-        var readStream = logdb.readLogFile('test1.log');
-        // For better or worse, I can't figure out how to be sure this stuff will
-        // come back without just waiting a bit.
-        setTimeout(function() {
-          readStream.pipe(es.writeArray(function(error, readData) {
-            JSON.stringify(writtenData).should.equal(JSON.stringify(readData));
-            done();
-          }));
-        }, 5);
-      }));
+          var readStream = logdb.readLogFile('test1.log');
+          // For better or worse, I can't figure out how to be sure this stuff will
+          // come back without just waiting a bit.
+          setTimeout(function() {
+            readStream.pipe(es.writeArray(function(error, readData) {
+              JSON.stringify(writtenData).should.equal(JSON.stringify(readData));
+              done();
+            }));
+          }, 5);
+        }));
     });
   });
   it('should store a json stream for a log file in order', function(done) {
