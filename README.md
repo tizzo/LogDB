@@ -1,5 +1,6 @@
 # LogDB
 [![Build Status](https://travis-ci.org/tizzo/LogDB.svg)](https://travis-ci.org/tizzo/LogDB)
+[![Coverage Status](https://coveralls.io/repos/tizzo/LogDB/badge.svg?branch=master)](https://coveralls.io/r/tizzo/LogDB?branch=master)
 
 LogDB is a simple library that uses the [LevelUp](https://github.com/rvagg/node-levelup)
 interface to log streams of records into job logs. It is intended for storing the log
